@@ -1,0 +1,47 @@
+.venv/
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.log
+frontend/node_modules/
+frontend/dist/
+frontend/coverage/
+.runtime/
+.backups/
+
+# Local editor configuration
+.idea/
+.vscode/
+*.iml
+
+# Local conversations and presentation outputs (keep on disk)
+docs/聊天记录归档/
+outputs/
+
+# Additional Python test and analysis caches
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Local temporary files
+*.tmp
+*.bak
+~$*
+.DS_Store
+Thumbs.db
+
+# Generated verification evidence
+docs/reports/
+
+# Local PowerShell launch and maintenance wrappers
+/start_*.ps1
+/stop_*.ps1
+/reset_*.ps1
+/restore_*.ps1
+
+/scripts/environment.ps1

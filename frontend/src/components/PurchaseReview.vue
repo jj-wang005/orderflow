@@ -1,0 +1,18 @@
+<script setup lang="ts">
+import {ref,onMounted,computed} from 'vue'
+import {ElMessageBox} from 'element-plus'
+import {importApi,type ReviewCandidate} from '../api/imports'
+import {ApiError,errorText} from '../api/client'
+import type {RowDetail} from '../types/api'
+const props=defineProps<{row:RowDetail}>(),emit=defineEmits<{processed:[RowDetail]}>()
+const candidates=ref<ReviewCandidate[]>([]),revision=ref(props.row.manual_revision||0),decision=ref<'NEW'|'EXISTING'>('NEW'),selected=ref<number|null>(null),reference=ref(''),note=ref(''),busy=ref(false),error=ref(''),key=ref(crypto.randomUUID()),submitted=ref<string|null>(null)
+const canSave=computed(()=>note.value.trim().length>=5&&(decision.value==='NEW'?(!reference.value.trim()||reference.value.trim().length>=8):!!selected.value))
+onMounted(async()=>{try{const c=await importApi.reviewContext(props.row.task_id,props.row.id);candidates.value=c.candidates;revision.value=c.revision}catch(e){error.value=errorText(e)}})
+async function submit(){if(busy.value||!canSave.value)return;const body={request_key:key.value,expected_revision:revision.value,decision:decision.value,note:note.value.trim(),purchase_reference:decision.value==='NEW'?(reference.value.trim()||null):null,existing_order_id:decision.value==='EXISTING'?selected.value:null};const serialized=JSON.stringify(body)
+ if(submitted.value&&submitted.value!==serialized){error.value='上次核实结果尚未确认，请先保留原内容重试，或刷新明细核对。';return}
+ try{await ElMessageBox.confirm(decision.value==='NEW'?'确认已依据实际客户需求核实这是再次采购或合法加购？系统将记录说明并重新执行历史匹配和安全校验；不要编造采购编号。':'确认该行对应所选已有采购订单？本次不会创建新订单。','确认采购归属',{confirmButtonText:'确认核实',cancelButtonText:'继续核对'})}catch{return}
+ busy.value=true;error.value='';submitted.value=serialized
+ try{const result=await importApi.review(props.row.task_id,props.row.id,body);emit('processed',result.row)}catch(e){error.value=errorText(e);if(e instanceof ApiError&&['PURCHASE_REFERENCE_EXISTS','INVALID_EXISTING_ORDER'].includes(e.code||''))submitted.value=null}finally{busy.value=false}}
+</script>
+<template><section class="purchase-review"><h3>确认是否重复采购</h3><el-alert title="相同料号、批次或数量不一定是重复采购。请核对客户的实际需求与已处理订单，再选择结论。" type="warning" :closable="false"/><el-alert v-if="error" :title="error" type="error" :closable="false"/><el-form label-position="top" :disabled="busy"><el-form-item label="核实结论"><el-radio-group v-model="decision"><el-radio value="NEW">这是新的采购／加购</el-radio><el-radio value="EXISTING" :disabled="!candidates.length">这笔采购已经处理过</el-radio></el-radio-group></el-form-item><el-form-item v-if="decision==='EXISTING'" label="采购信息相符的已处理订单"><el-select v-model="selected" placeholder="请选择核实一致的采购"><el-option v-for="o in candidates" :key="o.id" :value="o.id" :label="'#'+o.id+' · '+(o.customer_order_no||'无单号')+' · '+(o.customer_material_code||'')+' · '+(o.customer_model||o.customer_batch||'')+' · 数量 '+o.quantity+' · 来源任务 #'+(o.import_task_id||'未知')+' / '+(o.source_sheet_name||'')+' 第 '+(o.source_row_number||'未知')+' 行'"/></el-select></el-form-item><el-form-item v-else label="稳定采购明细编号（可选，填写时至少 8 字符）"><el-input v-model="reference" maxlength="128" placeholder="仅填写确实存在并经核实的采购单/分批需求编号与明细标识"/><p class="muted">没有稳定明细编号可以留空，必须在下方说明真实核实依据。不要填写随机编号或补造 Excel 字段；同客户同稳定明细编号只能建一单。</p></el-form-item><el-form-item label="核实依据与说明（至少 5 字符）" required><el-input v-model="note" type="textarea" maxlength="500"/></el-form-item><el-button type="primary" :loading="busy" :disabled="!canSave" @click="submit">确认采购归属并继续处理</el-button></el-form></section></template>
+<style scoped>.purchase-review{padding:18px;border:1px solid var(--el-color-warning-light-5);border-radius:8px;margin:20px 0}.purchase-review .el-form{margin-top:18px}</style>

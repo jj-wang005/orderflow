@@ -1,0 +1,162 @@
+[
+  {
+    "customer": {
+      "customer_id": "A",
+      "customer_name": "A客户",
+      "sheet_name": "Sheet1",
+      "header_row": 1,
+      "field_mapping": {
+        "采购订单号": "customer_order_no",
+        "物料/品项编码": "customer_material_code",
+        "订单数量": "quantity"
+      },
+      "enabled": true,
+      "config_version": 1
+    },
+    "rule": {
+      "filter_conditions": {
+        "customer_scope": "same_customer",
+        "eligible_statuses": [
+          "VALID",
+          "PROCESSING",
+          "SHIPPED",
+          "COMPLETED"
+        ],
+        "allowed_source_types": [
+          "SEED",
+          "AUTO"
+        ],
+        "historical_quantity": null
+      },
+      "sort_config": [
+        {
+          "field": "created_at",
+          "direction": "DESC"
+        },
+        {
+          "field": "id",
+          "direction": "DESC"
+        }
+      ],
+      "enabled": true,
+      "rule_version": 1,
+      "match_fields": [
+        "customer_order_no"
+      ],
+      "validation_config": {
+        "extra_required_fields": [
+          "customer_material_code"
+        ],
+        "consistency_fields": [
+          "customer_material_code"
+        ]
+      }
+    }
+  },
+  {
+    "customer": {
+      "customer_id": "B",
+      "customer_name": "B客户",
+      "sheet_name": "Sheet1",
+      "header_row": 1,
+      "field_mapping": {
+        "单号": "customer_order_no",
+        "机型": "customer_model",
+        "物料编码": "customer_material_code",
+        "数量": "quantity"
+      },
+      "enabled": true,
+      "config_version": 1
+    },
+    "rule": {
+      "filter_conditions": {
+        "customer_scope": "same_customer",
+        "eligible_statuses": [
+          "VALID",
+          "PROCESSING",
+          "SHIPPED",
+          "COMPLETED"
+        ],
+        "allowed_source_types": [
+          "SEED",
+          "AUTO"
+        ],
+        "historical_quantity": null
+      },
+      "sort_config": [
+        {
+          "field": "created_at",
+          "direction": "DESC"
+        },
+        {
+          "field": "id",
+          "direction": "DESC"
+        }
+      ],
+      "enabled": true,
+      "rule_version": 1,
+      "match_fields": [
+        "customer_order_no",
+        "customer_model"
+      ],
+      "validation_config": {
+        "extra_required_fields": [],
+        "consistency_fields": []
+      }
+    }
+  },
+  {
+    "customer": {
+      "customer_id": "C",
+      "customer_name": "C客户",
+      "sheet_name": "Sheet1",
+      "header_row": 1,
+      "field_mapping": {
+        "客批号": "customer_batch",
+        "料号": "customer_material_code",
+        "数量": "quantity"
+      },
+      "enabled": true,
+      "config_version": 1
+    },
+    "rule": {
+      "filter_conditions": {
+        "customer_scope": "same_customer",
+        "eligible_statuses": [
+          "VALID",
+          "PROCESSING",
+          "SHIPPED",
+          "COMPLETED"
+        ],
+        "allowed_source_types": [
+          "SEED",
+          "AUTO"
+        ],
+        "historical_quantity": {
+          "operator": "gt",
+          "value": "500"
+        }
+      },
+      "sort_config": [
+        {
+          "field": "created_at",
+          "direction": "DESC"
+        },
+        {
+          "field": "id",
+          "direction": "DESC"
+        }
+      ],
+      "enabled": true,
+      "rule_version": 1,
+      "match_fields": [
+        "customer_batch",
+        "customer_material_code"
+      ],
+      "validation_config": {
+        "extra_required_fields": [],
+        "consistency_fields": []
+      }
+    }
+  }
+]

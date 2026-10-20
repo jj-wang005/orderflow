@@ -1,0 +1,50 @@
+[
+  {
+    "order_no": "SEED-M03-V1-A-ZERO-PRICE",
+    "customer_id": "A",
+    "customer_order_no": "1206692207",
+    "customer_material_code": "E0112-000033",
+    "customer_batch": null,
+    "customer_model": null,
+    "product_code": "SIM-A-033",
+    "product_name": "模拟测试产品 SIM-A-033",
+    "unit_price": "0",
+    "quantity": "800",
+    "status": "VALID",
+    "source_type": "SEED",
+    "created_at": "2025-01-02T10:00:00",
+    "purpose": "零价无效参考"
+  },
+  {
+    "order_no": "SEED-M03-V1-B-NEGATIVE-PRICE",
+    "customer_id": "B",
+    "customer_order_no": "01-202505-479",
+    "customer_material_code": "R41-633TS6743QIDB1C",
+    "customer_batch": null,
+    "customer_model": "E65D71B",
+    "product_code": "SIM-B-003",
+    "product_name": "模拟测试产品 SIM-B-003",
+    "unit_price": "-1.00",
+    "quantity": "800",
+    "status": "VALID",
+    "source_type": "SEED",
+    "created_at": "2025-01-02T10:00:00",
+    "purpose": "负价无效参考"
+  },
+  {
+    "order_no": "SEED-M03-V1-C-ZERO-PRICE",
+    "customer_id": "C",
+    "customer_order_no": null,
+    "customer_material_code": "950140664",
+    "customer_batch": "GDZ2B51PG",
+    "customer_model": null,
+    "product_code": "SIM-C-005",
+    "product_name": "模拟测试产品 SIM-C-005",
+    "unit_price": "0",
+    "quantity": "800",
+    "status": "VALID",
+    "source_type": "SEED",
+    "created_at": "2025-01-02T10:00:00",
+    "purpose": "数量合格但价格为零"
+  }
+]
